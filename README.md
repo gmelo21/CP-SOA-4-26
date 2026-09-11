@@ -32,16 +32,14 @@ API ReST em Spring Boot para gestão de uma auto-escola: instrutores, alunos, us
 
 ### Primeiro administrador
 
-Apenas administradores podem cadastrar usuários, então o primeiro `ADMIN` precisa ser definido direto no banco:
+Em um banco sem nenhum administrador, a migração `V10` cria automaticamente o usuário **`admin`** com a senha
+**`admin123`** (perfil `ADMIN`). Recomenda-se trocar essa senha depois, com `PUT /usuarios/senha`.
+
+Se o banco já tiver um usuário chamado `admin` com perfil `USER`, a migração não faz nada; nesse caso, promova um
+usuário direto no banco:
 
 ```sql
 update usuarios set perfil = 'ADMIN' where login = 'seu_login';
-```
-
-Se a tabela estiver vazia, gere o hash BCrypt da senha com a classe `temp/GerarSenhaHash` e insira:
-
-```sql
-insert into usuarios (login, senha, perfil) values ('admin', '<hash gerado>', 'ADMIN');
 ```
 
 ## Autenticação

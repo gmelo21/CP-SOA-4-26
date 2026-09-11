@@ -22,6 +22,7 @@ public record DadosAgendamento(
         @NotNull
         @Future
         @JsonProperty("data_hora")
-        @JsonFormat(pattern = "dd/MM/yyyy - HH:mm")
+        @JsonFormat(pattern = DadosAgendamento.FORMATO_DATA_HORA)
         LocalDateTime dataHora) {
+    public static final String FORMATO_DATA_HORA = "dd/MM/yyyy - HH:mm";
 }

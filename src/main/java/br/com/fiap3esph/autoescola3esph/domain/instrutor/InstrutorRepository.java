@@ -30,4 +30,8 @@ public interface InstrutorRepository extends JpaRepository<Instrutor, Long> {
     Instrutor escolherInstrutorAleatorioDisponivel(Especialidade especialidade, LocalDateTime dataHora);
 
     boolean existsByIdAndAtivoFalse(Long id);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByCnh(String cnh);
 }

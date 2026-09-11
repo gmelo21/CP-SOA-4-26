@@ -8,4 +8,8 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     Page<Aluno> findAllByAtivoTrue(Pageable paginacao);
 
     boolean existsByIdAndAtivoFalse(Long id);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByCpf(String cpf);
 }

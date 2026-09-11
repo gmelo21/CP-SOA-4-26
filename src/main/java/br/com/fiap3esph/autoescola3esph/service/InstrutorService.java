@@ -1,5 +1,6 @@
 package br.com.fiap3esph.autoescola3esph.service;
 
+import br.com.fiap3esph.autoescola3esph.domain.agenda.ValidacaoException;
 import br.com.fiap3esph.autoescola3esph.domain.instrutor.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,13 @@ public class InstrutorService {
 
     @Transactional
     public DadosDetalhamentoInstrutor cadastrarInstrutor(DadosCadastroInstrutor dados) {
+        if (repository.existsByEmail(dados.email())) {
+            throw new ValidacaoException("Já existe um instrutor cadastrado com esse e-mail!");
+        }
+        if (repository.existsByCnh(dados.cnh())) {
+            throw new ValidacaoException("Já existe um instrutor cadastrado com essa CNH!");
+        }
+
         Instrutor instrutor = new Instrutor(dados);
         Instrutor saved = repository.save(instrutor);
         return new DadosDetalhamentoInstrutor(saved);

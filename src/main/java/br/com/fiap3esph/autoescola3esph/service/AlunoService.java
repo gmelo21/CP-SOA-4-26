@@ -1,5 +1,6 @@
 package br.com.fiap3esph.autoescola3esph.service;
 
+import br.com.fiap3esph.autoescola3esph.domain.agenda.ValidacaoException;
 import br.com.fiap3esph.autoescola3esph.domain.aluno.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,13 @@ public class AlunoService {
 
     @Transactional
     public DadosDetalhamentoAluno cadastrarAluno(DadosCadastroAluno dados) {
+        if (repository.existsByEmail(dados.email())) {
+            throw new ValidacaoException("Já existe um aluno cadastrado com esse e-mail!");
+        }
+        if (repository.existsByCpf(dados.cpf())) {
+            throw new ValidacaoException("Já existe um aluno cadastrado com esse CPF!");
+        }
+
         Aluno aluno = new Aluno(dados);
         Aluno saved = repository.save(aluno);
         return new DadosDetalhamentoAluno(saved);

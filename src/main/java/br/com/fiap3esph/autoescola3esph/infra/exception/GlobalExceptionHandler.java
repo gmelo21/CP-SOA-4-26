@@ -13,8 +13,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tools.jackson.databind.exc.InvalidFormatException;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestControllerAdvice
@@ -47,6 +50,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<DadosMessage> tratarJsonInvalido(HttpMessageNotReadableException e) {
+        if (e.getCause() instanceof InvalidFormatException erro
+                && erro.getTargetType() != null
+                && erro.getTargetType().isEnum()
+                && !erro.getPath().isEmpty()) {
+            String campo = erro.getPath().getLast().getPropertyName();
+            String opcoes = Arrays.stream(erro.getTargetType().getEnumConstants())
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(new DadosMessage(
+                    "Valor inválido para o campo '" + campo + "'. Opções aceitas: " + opcoes));
+        }
         return ResponseEntity.badRequest().body(new DadosMessage(e.getMessage()));
     }
 
